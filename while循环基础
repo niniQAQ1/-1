@@ -1,0 +1,66 @@
+题目是输入一个数字，0，1开头，数字是几列表里就输出几个数，列表里第一个数和第二个数相加就是第三个数
+num = int(input("Enter a number: ")) #存放用户输入的数字
+a = 0 #保存当前要输出的数
+b = 1 #因为是start from 0， 1， b保存下一个数
+sm_list = [] #建立一个空列表，命名，用来存放生成的数
+for i in range(num): # 循环执行num次
+    sm_list.append(a) #把当前的a加到列表里
+    a, b = b, a + b   #新的a等于原来的b， 新的b等于原来的a + b 这样a和b永远是两个最新的数
+print(",".join(map(str, sm_list))) 
+# ","是字符串，因为要连接数字嘛，“字符串”.join([列表])这个函数的意思是把列表里的元素用“字符串” 连接起来， map（str, sm_list)的意思是把列表里的所有数字都转成字符串
+
+第一题
+total = 0 
+counter = 0
+end = 100 # 相当于设置三个盒子，分别叫这三个名字
+while counter < end: #相当于设置一个前提条件，这里的条件是当counter小于end时，下面是添加指令
+    if counter % 2 == 0 #相当于取这里面的所有偶数
+        total += counter#指令1，让total记录counter
+    counter += 1#指令2， 让counter每次循环都+1，直到触碰到end的100， 破坏掉counter小于100的这个条件
+print(total)
+
+第二题
+prime = number >= 2 #设置一个叫prime盒子，prime的盒子里面的初始化是number大于等于2
+divisor = 2 #设置一个叫divisor的盒子，初始化设置2
+while divisor < number and prime:#设置前提条件（筛选）当divisor小于number 以及prime的条件成立时（number大于等于2）
+    prime = number % divisor != 0 #当满足上面while后的条件时，更新prime，现在的条件是当number可以整除divisor时prime成立（True）
+    divisor += 1 #然后满足while后面的那句条件时 divisor + 1
+if prime: #如果prime（True）
+    print(f"{number} is prime")
+else:
+    print(f"{number} is not prime")
+    print(f"{number} is divisible by {divisor - 1}")
+
+第三题
+num = int(input("Enter a positive integer: "))
+i = 1
+while i <= 10:
+    print(f"{i} * {b} = {i * b}")
+    i += 1
+
+第四题
+posi = int(input("Enter a positive integer: "))
+i = 0
+while i <= posi:
+    print(i, end = "") #用end表明这个这个列表里面的用的是空格去分离
+    i += 1
+
+第五题
+posi = int(input("Enter a positive intger between 5 and 30: "))
+print("Start to run!")
+while posi >= 0:
+     print(posi)
+     if posi == 1:
+        print(f"{posi} minute to go, keep it up")
+    elif posi == 0
+        print("finished, well done!")
+第六题
+posi = int(input("Enter a positive integer: "))
+while posi <= 0
+    posi = int(input("Enter a positive integer: "))
+print(f"{posi} is positive")
+
+第七题
+sfe = str(input("Speak friend and enter: "))
+while sfe != "Mellon"
+    print(f"Reply: {sfe}")
