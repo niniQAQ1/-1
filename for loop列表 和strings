@@ -1,0 +1,8 @@
+factor = int(input("Enter a factor: "))
+maxi = int(input("Enter a maximum: "))
+total = 0 #设置一个空篮子，等着装东西
+#while循环里，必须手动设置计数器，比如i = 0 之类，但在for循环里不需要这样做，for后面相当于i的设置
+for i in range(1, maxium + 1):#因为range（a，b）生成的是从a到b-1，如果写range（1， maximum）就会少算maximum本身，所以要这样才能包含最大值
+    if i % factor == 0:
+        total += i
+print（
