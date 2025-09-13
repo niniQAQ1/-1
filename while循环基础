@@ -64,3 +64,38 @@ print(f"{posi} is positive")
 sfe = str(input("Speak friend and enter: "))
 while sfe != "Mellon"
     print(f"Reply: {sfe}")
+    sfe = str(input("Speak friend and enter: "))
+
+print("Relpy: Mellon")
+print("Welcome to Maria! Have a nice stay.")
+
+第八题
+am = int(input("Enter an amount, multiple of 10: "))
+while am % 10 != 0:
+    am = int(input("Enter an amount, multiple of 10: ")) #这两行相当于设置了关卡，通关才会继续print，就是不是十的倍数的就被筛掉了
+print(f"Thank you. You will receive NZD{am} in bill(s) of 10")
+
+第九题
+mass_oz = float(input("Enter a mass in oz: "))
+gram = mass_oz * 28.35
+print(f{mass_oz:.2f} is equivalent to {gram:.2f)}g")
+another_mass = str(input("Convery another mass (y/n)?"))
+while another_mass != "n"
+    another_mass = str(input("Convery another mass (y/n)?"))
+    mass_oz = float(input("Enter a mass in oz: "))
+    gram = mass_oz * 28.35
+    print(f{mass_oz;.2f} is equivalent to {gram:.2f}g")
+    if another_mass == "n":
+        break
+
+第十题
+rst = int(input("Enter the range start: "))
+red = int(input("Enter the range end: "))
+enin = int(input(f"Enter an integer between {rst} and {red} (inclusive): "))
+ total of all the invalid integer is {i}"))
+    
+
+    
+
+
+     
