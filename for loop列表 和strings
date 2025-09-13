@@ -49,3 +49,8 @@ while count >= 0:#当count大于等于0时
     count -= 1 #count每次循环都-1直到触及0
 subsequence = data[smallest:biggest+1] #data[1:6+1]#这一行用到了slice（切片）就是取出列表里1到7的元素，就是第二位到最后一位，如果是【a，b】就是取到b之前到那个元素，不包含b本身
 print(subsequence)#然后打印这个列表
+
+第五题
+text = str(input("Enter the string: "))#把用户输入的str储存到text变量里
+a = list(text) #list（）是一个内建函数，这里是把text拆成一个一个元素，就是分别的字符串，类似把单词拆成“h” “e”这种，然后这些被拆分的元素组成一个列表，记住这个函数只能拆字符串
+print(f"The first and last letters are {a[0]} and {a[-1]}.")#格式化输出，打印这个列表里的第一位和最后一位，记住index和slice不一样
