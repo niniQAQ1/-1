@@ -1,0 +1,25 @@
+while loop
+for loop
+range(start(开始,stop结束不包括结束那个数,step每次增长几）
+当start小于stop时，step是整数，当start大于stop时，step为负数
+step不能为0
+for number in range(10)#就是print0-9不包括10
+    等于print（i）
+    等于print（0，10，1）
+for number in range（10）
+    print（aaa）#是出来十行aaa
+list1 = [1, 2, 3, 4, 5]
+for i in list1
+    print(i)是print列表里面所有的字符，是循环字符串/列表的长度
+for loop是用于已经知道次数的循环，while是用于未知的
+while后跟得是条件，如果出现当。。时停止，一定是用while loop
+sum = 0
+while sum <= 100:
+    num = int(input("Please input: "))
+    sum += num
+print(sum)#没有缩进所以只会在循环完成时print，如果有缩进会在每次循环都print
+maxnum = -1
+for i in range(5)
+      num = int(input("please input"))
+  
+    
