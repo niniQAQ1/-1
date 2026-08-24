@@ -1,0 +1,48 @@
+在写class的时候，我们需要field，constructo以及methods，field 类似ingredients，constructo类似放在锅里，methods类似于menu
+public class Student {//field
+    private String name;
+    private int score;
+    // ==========================================constructor
+    无parameter：
+    public Student() {
+        this.name = "未知学生";
+        this.score = 0;
+    }//当你写这种无parameter时，需要给他们默认值
+
+    // ② 有参构造函数，可以灵活赋值，可以把外面传进来的name和score存进变量里
+    public Student(String name, int score) {
+        this.name = name;
+        this.score = score;
+    }
+
+    // ==========================================
+    // 3. Methods（方法）: 这个东西能做哪些动作？
+    // ==========================================
+//getter也是methods
+    // --- Getter & Setter（安全收发数据的专属窗口）---
+    public String getName() {
+        return name; // 拿名字[cite: 6]
+    }
+
+    public void setName(String name) {
+        this.name = name; // 改名字[cite: 6]
+    }
+
+    public int getScore() {
+        return score; // 拿分数[cite: 6]
+    }
+
+    public void setScore(int score) {
+        // 可以在这里加安全检查，比如分数不能是负数！[cite: 6]
+        if (score >= 0 && score <= 100) {
+            this.score = score;
+        } else {
+            System.out.println("无效的分数！");
+        }
+    }
+
+    // --- 普通业务方法（这个类能干的活）---[cite: 6]
+    public void study() {
+        System.out.println(name + " 正在学习，当前考了 " + score + " 分！");
+    }
+}
