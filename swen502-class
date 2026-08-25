@@ -46,3 +46,161 @@ public class Student {//field
         System.out.println(name + " 正在学习，当前考了 " + score + " 分！");
     }
 }
+
+在main的class里，要写
+public static void main(String[] args)
+
+
+abstract class is a new class(parent),用处是专门给别人extends，当别人extends完才能用，用处是avoid error
+例子：
+abstracr class Noodle{
+    pravate String name;  //field
+    public Noodle(String name){
+        this.name = name;}//constractor  任何要用这个方法都要传入一个name，以及必须按照从上到下的顺序
+父类的构造函数是规矩的制定者，它开了 3 个坑，super(...) 填空的时候就必须填满 3 个坑，一个都不能少
+    methods:
+    public void boilWater(){//普通方法
+        System.out.println("(" + name +")烧开水");
+}
+    public abstract void makeSoup();//abstract method:
+class lanzhouNoodle extends Noodle{
+    public LanzhouNoodle(){
+        super("牛肉拉面”）;}//传入的name，因为是extend from noodle这个parent，必须按从上到下的顺序传入
+constructor reload
+abstract class Noodle {
+    private String name;
+    private int temperature;
+    private String soupName;
+
+    // 【选项 A】：完全体构造函数（需要 3 个参数）
+    public Noodle(String name, int temperature, String soupName) {
+        this.name = name;
+        this.temperature = temperature;
+        this.soupName = soupName;
+    }
+
+    // 【选项 B】：省心版构造函数（只需要 2 个参数）
+    public Noodle(String name, String soupName) {
+        this.name = name;
+        this.soupName = soupName;
+        this.temperature = 100; // 悄悄把温度固定为 100
+    }
+}
+在jave里，一个子类只能extends一个类，但是一个parent可以有很多个子类，这样就可以polymorphism，就是用一个parent numphy or list，吧所有的子类统一管理
+interface
+abstract只能extend一个，但是interface可以有很多个，相当于考证书，它只在证书上写明：“持证者必须掌握 packFood()（打包）这个动作”，但证书本身不干活，谁考了这个证书，谁就必须在自己的身上把这个动作做出来
+第一步 定义interface
+eg：
+interface TakeoutService{
+    void packfood（）；//规定必须会packfood
+}
+eg2
+interface Payable {
+    void pay(double amount); // 规定必须会收银
+}
+第二步 实现interface，把动作补充完整
+// 👇 注意这里的 implements 后面的 TakeoutService 和 Payable，就是上面那两个 interface！[cite: 6]
+class LanzhouNoodle extends Noodle implements TakeoutService, Payable {这前面写所有的interfaces
+
+    public LanzhouNoodle() {
+        super("牛肉拉面"); // 叫老爸[cite: 5]
+    }
+    // 重写父类的抽象方法[cite: 6]
+    @Override
+    public void makeSoup() {
+        System.out.println("加清汤牛肉汤底！");
+    }
+
+    // 重写接口的抽象方法[cite: 6]
+    @Override
+    public void packFood() {
+        System.out.println("打包拉面，封紧盖子！");
+    }
+}
+
+    // ...
+}
+
+full example：
+// ==========================================
+// 第一段：定义父类（抽象类 Abstract Class）[cite: 6]
+// ==========================================
+abstract class Noodle {
+    private String name;
+
+    public Noodle(String name) {
+        this.name = name;
+    }
+
+    public abstract void makeSoup(); // 抽象方法[cite: 6]
+}
+
+
+// ==========================================
+// 第二段：定义接口（Interface 技能标准）[cite: 6]
+// ==========================================
+interface TakeoutService {
+    void packFood(); // 纯留白方法[cite: 6]
+}
+
+
+// ==========================================
+// 第三段：子类继承父类 + 实现接口（真正干活的 Class）
+// ==========================================
+class LanzhouNoodle extends Noodle implements TakeoutService {
+
+    public LanzhouNoodle() {
+        super("牛肉拉面"); // 叫老爸[cite: 5]
+    }
+
+    // 重写父类的抽象方法[cite: 6]
+    @Override
+    public void makeSoup() {
+        System.out.println("加清汤牛肉汤底！");
+    }
+
+    // 重写接口的抽象方法[cite: 6]
+    @Override
+    public void packFood() {
+        System.out.println("打包拉面，封紧盖子！");
+    }
+}
+
+
+// ==========================================
+// 第四段：Main 运行类（程序的启动总开关）
+// ==========================================
+public class Main {
+    public static void main(String[] args) {
+        LanzhouNoodle n = new LanzhouNoodle();
+        n.makeSoup();
+        n.packFood();
+    }
+}
+
+lambda：
+// 一行搞定排序！
+plants.sort((o1, o2) -> o1.getSize() - o2.getSize());
+//
+plants改成你新起的这个列表的名字，
+① 数据变量名：存数据的容器/数组名（比如 myList、plants、students）。
+
+② 临时外号：你自己随便取的名字（如 (a, b)、(s1, s2)），左右两边一致即可。
+
+③ -> 符号：Lambda 固定连接符，代表“拿着参数去干什么”。
+
+④ 属性比对与顺序：
+
+调用的方法：必须是对象里真实的 Getter（如 getScore()、getSize()）。
+
+升序（从小到大）：前减后 o1.get() - o2.get()
+
+降序（从大到小）：后减前 o2.get() - o1.get(
+
+generics
+eg：
+ArrayList<String> names = new ArrayList<>(); // 规定这个列表只能装 String
+或者
+class Box<T> {
+       private T content; // content 的类型以后由使用者决定（比如写 Box<Integer> 它就是 int）
+   }
