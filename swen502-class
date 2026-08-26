@@ -394,3 +394,516 @@ int total = Stream.of(1, 2, 3, 4, 5, 6, 7, 8)
                   .skip(2)                 // 剩下 [3, 4, 5, 6, 7, 8][cite: 1]
                   .limit(3)                // 剩下 [3, 4, 5][cite: 1]
                   .reduce(0, (a, b) -> a + b); // 3 + 4 + 5 = 12[cite: 1]
+
+
+
+
+student
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class Student {
+    private int id;
+    private String name;
+    // 当前正在修读的课程列表
+    private List<Course> enrolledCourses;
+    // 已完成课程的成绩：Key 为课程代码，Value 为成绩（如 "A+"）
+    private Map<String, String> completedGrades;
+
+    public Student(int id, String name) {
+        this.id = id;
+        this.name = name;
+        this.enrolledCourses = new ArrayList<>();
+        this.completedGrades = new HashMap<>();
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<Course> getEnrolledCourses() {
+        return enrolledCourses;
+    }
+
+    public Map<String, String> getCompletedGrades() {
+        return completedGrades;
+    }
+
+    // 选课
+    public void enrollCourse(Course course) {
+        if (!enrolledCourses.contains(course)) {
+            enrolledCourses.add(course);
+        }
+    }
+
+    // 退课
+    public void unenrollCourse(Course course) {
+        enrolledCourses.remove(course);
+    }
+
+    // 登记成绩（结课）
+    public void completeCourse(String courseCode, String grade) {
+        // 从在读列表中移除
+        enrolledCourses.removeIf(c -> c.getCode().equalsIgnoreCase(courseCode));
+        // 使用 put 方法将成绩存入 Map
+        completedGrades.put(courseCode, grade);
+    }
+
+    @Override
+    public String toString() {
+        return name + " (ID: " + id + ")";
+    }
+}
+
+course的class：
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class Course {
+    private String code;
+    private String title;
+    // 当前在读的学生列表
+    private List<Student> enrolledStudents;
+    // 已结课学生的成绩：Key 为 Student 对象，Value 为成绩
+    private Map<Student, String> studentGrades;
+
+    public Course(String code, String title) {
+        this.code = code;
+        this.title = title;
+        this.enrolledStudents = new ArrayList<>();
+        this.studentGrades = new HashMap<>();
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public List<Student> getEnrolledStudents() {
+        return enrolledStudents;
+    }
+
+    public Map<Student, String> getStudentGrades() {
+        return studentGrades;
+    }
+
+    // 学生加入课程
+    public void addStudent(Student student) {
+        if (!enrolledStudents.contains(student)) {
+            enrolledStudents.add(student);
+        }
+    }
+
+    // 学生退课
+    public void removeStudent(Student student) {
+        enrolledStudents.remove(student);
+    }
+
+    // 录入学生成绩
+    public void assignGrade(Student student, String grade) {
+        enrolledStudents.remove(student);
+        studentGrades.put(student, grade);
+    }
+
+    @Override
+    public String toString() {
+        return code + ": " + title;
+    }
+}
+
+
+system的：
+import java.util.HashMap;
+import java.util.Map;
+
+public class UniversitySystem {
+    // 维护多个 Map 以支持按不同条件快速查找
+    private Map<Integer, Student> studentsById = new HashMap<>();
+    private Map<String, Student> studentsByName = new HashMap<>();
+    private Map<String, Course> coursesByCode = new HashMap<>();
+
+    // 1. 添加学生
+    public boolean addStudent(int id, String name) {
+        if (studentsById.containsKey(id) || studentsByName.containsKey(name.toLowerCase())) {
+            return false; // ID 或 姓名已存在
+        }
+        Student student = new Student(id, name);
+        studentsById.put(id, student);
+        studentsByName.put(name.toLowerCase(), student);
+        return true;
+    }
+
+    // 2. 创建课程
+    public boolean createCourse(String code, String title) {
+        String upperCode = code.toUpperCase();
+        if (coursesByCode.containsKey(upperCode)) {
+            return false;
+        }
+        coursesByCode.put(upperCode, new Course(upperCode, title));
+        return true;
+    }
+
+    // 3. 查找学生 (通过 ID)
+    public Student getStudentById(int id) {
+        return studentsById.get(id); // 使用 Map.get
+    }
+
+    // 4. 查找学生 (通过姓名)
+    public Student getStudentByName(String name) {
+        return studentsByName.get(name.toLowerCase()); // 使用 Map.get
+    }
+
+    // 5. 查找课程 (通过代码)
+    public Course getCourseByCode(String code) {
+        return coursesByCode.get(code.toUpperCase()); // 使用 Map.get
+    }
+
+    // 6. 选课
+    public boolean enrollStudent(int studentId, String courseCode) {
+        Student student = getStudentById(studentId);
+        Course course = getCourseByCode(courseCode);
+
+        if (student == null || course == null) {
+            return false;
+        }
+
+        student.enrollCourse(course);
+        course.addStudent(student);
+        return true;
+    }
+
+    // 7. 退课
+    public boolean unenrollStudent(int studentId, String courseCode) {
+        Student student = getStudentById(studentId);
+        Course course = getCourseByCode(courseCode);
+
+        if (student == null || course == null) {
+            return false;
+        }
+
+        student.unenrollCourse(course);
+        course.removeStudent(student);
+        return true;
+    }
+
+    // 8. 录入成绩
+    public boolean assignGrade(int studentId, String courseCode, String grade) {
+        Student student = getStudentById(studentId);
+        Course course = getCourseByCode(courseCode);
+
+        if (student == null || course == null) {
+            return false;
+        }
+
+        student.completeCourse(course.getCode(), grade);
+        course.assignGrade(student, grade);
+        return true;
+    }
+}
+
+
+main的：
+import java.util.Map;
+import java.util.Scanner;
+
+public class Main {
+    private static UniversitySystem system = new UniversitySystem();
+    private static Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        // 初始化一些测试数据
+        initSampleData();
+
+        while (true) {
+            System.out.println("\n========== 大学管理系统 ==========");
+            System.out.println("1. 添加学生");
+            System.out.println("2. 创建课程");
+            System.out.println("3. 按 ID 查找学生");
+            System.out.println("4. 按姓名查找学生");
+            System.out.println("5. 按课程代码查找课程");
+            System.out.println("6. 为学生选课");
+            System.out.println("7. 录入课程成绩");
+            System.out.println("8. 为学生退课");
+            System.out.println("0. 退出系统");
+            System.out.print("请选择操作 (0-8): ");
+
+            String choice = scanner.nextLine();
+            switch (choice) {
+                case "1": handleAddStudent(); break;
+                case "2": handleCreateCourse(); break;
+                case "3": handleFindStudentById(); break;
+                case "4": handleFindStudentByName(); break;
+                case "5": handleFindCourse(); break;
+                case "6": handleEnroll(); break;
+                case "7": handleAssignGrade(); break;
+                case "8": handleUnenroll(); break;
+                case "0":
+                    System.out.println("系统已退出。");
+                    return;
+                default:
+                    System.out.println("无效输入，请重新选择！");
+            }
+        }
+    }
+
+    private static void initSampleData() {
+        system.addStudent(1000001, "Alice");
+        system.addStudent(1000002, "Bob");
+        system.createCourse("SWEN501", "Software Development Methodologies");
+        system.createCourse("SWEN502", "Software Architecture");
+        system.enrollStudent(1000001, "SWEN501");
+        system.assignGrade(1000001, "SWEN501", "A+");
+        system.enrollStudent(1000001, "SWEN502");
+    }
+
+    private static void handleAddStudent() {
+        System.out.print("请输入学生 ID (1000000 - 4000000): ");
+        int id = Integer.parseInt(scanner.nextLine());
+        System.out.print("请输入学生姓名: ");
+        String name = scanner.nextLine();
+
+        if (system.addStudent(id, name)) {
+            System.out.println("学生添加成功！");
+        } else {
+            System.out.println("添加失败：ID 或 姓名已存在。");
+        }
+    }
+
+    private static void handleCreateCourse() {
+        System.out.print("请输入课程代码 (如 SWEN501): ");
+        String code = scanner.nextLine();
+        System.out.print("请输入课程名称: ");
+        String title = scanner.nextLine();
+
+        if (system.createCourse(code, title)) {
+            System.out.println("课程创建成功！");
+        } else {
+            System.out.println("创建失败：课程代码已存在。");
+        }
+    }
+
+    private static void handleFindStudentById() {
+        System.out.print("请输入学生 ID: ");
+        int id = Integer.parseInt(scanner.nextLine());
+        Student student = system.getStudentById(id);
+        displayStudentInfo(student);
+    }
+
+    private static void handleFindStudentByName() {
+        System.out.print("请输入学生姓名: ");
+        String name = scanner.nextLine();
+        Student student = system.getStudentByName(name);
+        displayStudentInfo(student);
+    }
+
+    private static void displayStudentInfo(Student student) {
+        if (student == null) {
+            System.out.println("未找到该学生！");
+            return;
+        }
+        System.out.println("\n--- 学生信息 ---");
+        System.out.println("ID: " + student.getId());
+        System.out.println("姓名: " + student.getName());
+
+        System.out.println("当前在读课程:");
+        if (student.getEnrolledCourses().isEmpty()) {
+            System.out.println("  (无)");
+        } else {
+            for (Course c : student.getEnrolledCourses()) {
+                System.out.println("  - " + c);
+            }
+        }
+
+        System.out.println("已结课及成绩:");
+        if (student.getCompletedGrades().isEmpty()) {
+            System.out.println("  (无)");
+        } else {
+            for (Map.Entry<String, String> entry : student.getCompletedGrades().entrySet()) {
+                System.out.println("  - " + entry.getKey() + ": " + entry.getValue());
+            }
+        }
+    }
+
+    private static void handleFindCourse() {
+        System.out.print("请输入课程代码: ");
+        String code = scanner.nextLine();
+        Course course = system.getCourseByCode(code);
+
+        if (course == null) {
+            System.out.println("未找到该课程！");
+            return;
+        }
+
+        System.out.println("\n--- 课程信息 ---");
+        System.out.println("课程代码: " + course.getCode());
+        System.out.println("课程名称: " + course.getTitle());
+        System.out.println("在读总人数: " + course.getEnrolledStudents().size());
+
+        System.out.println("当前在读学生列表:");
+        if (course.getEnrolledStudents().isEmpty()) {
+            System.out.println("  (无)");
+        } else {
+            for (Student s : course.getEnrolledStudents()) {
+                System.out.println("  - " + s);
+            }
+        }
+
+        System.out.println("已结课学生及成绩:");
+        if (course.getStudentGrades().isEmpty()) {
+            System.out.println("  (无)");
+        } else {
+            for (Map.Entry<Student, String> entry : course.getStudentGrades().entrySet()) {
+                System.out.println("  - " + entry.getKey().getName() + " (ID: " + entry.getKey().getId() + "): " + entry.getValue());
+            }
+        }
+    }
+
+    private static void handleEnroll() {
+        System.out.print("请输入学生 ID: ");
+        int id = Integer.parseInt(scanner.nextLine());
+        System.out.print("请输入课程代码: ");
+        String code = scanner.nextLine();
+
+        if (system.enrollStudent(id, code)) {
+            System.out.println("选课成功！");
+        } else {
+            System.out.println("选课失败：请检查学生 ID 或 课程代码是否存在。");
+        }
+    }
+
+    private static void handleAssignGrade() {
+        System.out.print("请输入学生 ID: ");
+        int id = Integer.parseInt(scanner.nextLine());
+        System.out.print("请输入课程代码: ");
+        String code = scanner.nextLine();
+        System.out.print("请输入成绩 (如 A+, B, C): ");
+        String grade = scanner.nextLine();
+
+        if (system.assignGrade(id, code, grade)) {
+            System.out.println("成绩录入成功！");
+        } else {
+            System.out.println("录入失败：请检查学生 ID 或 课程代码。");
+        }
+    }
+
+    private static void handleUnenroll() {
+        System.out.print("请输入学生 ID: ");
+        int id = Integer.parseInt(scanner.nextLine());
+        System.out.print("请输入课程代码: ");
+        String code = scanner.nextLine();
+
+        if (system.unenrollStudent(id, code)) {
+            System.out.println("退课成功！");
+        } else {
+            System.out.println("退课失败：请检查学生 ID 或 课程代码。");
+        }
+    }
+}
+
+
+
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.*;
+
+public class FunWithWords {
+
+    public static void main(String[] args) {
+        // 替换为你的文件路径，如 "100k-AnneOfGreenGables.txt"
+        String filePath = "100k-AnneOfGreenGables.txt";
+
+        System.out.println("=== 任务 1：提取唯一单词与性能对比 ===");
+        findUniqueWithList(filePath);
+        findUniqueWithSet(filePath);
+
+        System.out.println("\n=== 任务 2：统计单词出现频次 ===");
+        countWordFrequency(filePath);
+    }
+
+    // 1.1 使用 ArrayList 寻找唯一单词
+    public static void findUniqueWithList(String filePath) {
+        List<String> uniqueWords = new ArrayList<>();
+        long start = System.currentTimeMillis();
+
+        try (Scanner scanner = new Scanner(new File(filePath))) {
+            while (scanner.hasNext()) {
+                String word = cleanWord(scanner.next());
+                if (!word.isEmpty() && !uniqueWords.contains(word)) { // List 查找较慢
+                    uniqueWords.add(word);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.err.println("找不到文件: " + filePath);
+            return;
+        }
+
+        long end = System.currentTimeMillis();
+        System.out.println("ArrayList - 唯一单词数量: " + uniqueWords.size() + " | 耗时: " + (end - start) + " ms");
+    }
+
+    // 1.2 使用 HashSet 寻找唯一单词
+    public static void findUniqueWithSet(String filePath) {
+        Set<String> uniqueWords = new HashSet<>();
+        long start = System.currentTimeMillis();
+
+        try (Scanner scanner = new Scanner(new File(filePath))) {
+            while (scanner.hasNext()) {
+                String word = cleanWord(scanner.next());
+                if (!word.isEmpty()) {
+                    uniqueWords.add(word); // HashSet 自动去重且极快
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.err.println("找不到文件: " + filePath);
+            return;
+        }
+
+        long end = System.currentTimeMillis();
+        System.out.println("HashSet   - 唯一单词数量: " + uniqueWords.size() + " | 耗时: " + (end - start) + " ms");
+    }
+
+    // 2. 使用 HashMap 统计词频
+    public static void countWordFrequency(String filePath) {
+        Map<String, Integer> wordCounts = new HashMap<>();
+
+        try (Scanner scanner = new Scanner(new File(filePath))) {
+            while (scanner.hasNext()) {
+                String word = cleanWord(scanner.next());
+                if (word.isEmpty()) continue;
+
+                // 如果存在就 +1，不存在则初始为 1
+                wordCounts.put(word, wordCounts.getOrDefault(word, 0) + 1);
+            }
+        } catch (FileNotFoundException e) {
+            System.err.println("找不到文件: " + filePath);
+            return;
+        }
+
+        System.out.println("成功统计！独立单词总数: " + wordCounts.size());
+        
+        // 打印前 10 个单词示例
+        System.out.println("部分单词频次示例:");
+        int count = 0;
+        for (Map.Entry<String, Integer> entry : wordCounts.entrySet()) {
+            System.out.println("  " + entry.getKey() + ": " + entry.getValue());
+            if (++count >= 10) break;
+        }
+    }
+
+    // 清洗单词：转换为小写并去除标点符号
+    private static String cleanWord(String raw) {
+        return raw.toLowerCase().replaceAll("[^a-zA-Z0-9]", "");
+    }
+}
