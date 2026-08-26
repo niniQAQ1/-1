@@ -89,6 +89,8 @@ abstract class Noodle {
 在jave里，一个子类只能extends一个类，但是一个parent可以有很多个子类，这样就可以polymorphism，就是用一个parent numphy or list，吧所有的子类统一管理
 interface
 abstract只能extend一个，但是interface可以有很多个，相当于考证书，它只在证书上写明：“持证者必须掌握 packFood()（打包）这个动作”，但证书本身不干活，谁考了这个证书，谁就必须在自己的身上把这个动作做出来
+
+
 第一步 定义interface
 eg：
 interface TakeoutService{
@@ -204,3 +206,191 @@ ArrayList<String> names = new ArrayList<>(); // 规定这个列表只能装 Stri
 class Box<T> {
        private T content; // content 的类型以后由使用者决定（比如写 Box<Integer> 它就是 int）
    }
+只能装《》里面的以及这个obj的extent
+例子：
+public class Dog {
+    private String name;
+    private int age;
+
+    // ✅ 正确构造函数（无 void，名字与类名 Dog 完全一致）
+    public Dog(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+}
+写在main里// 1. 创建两条 Dog 实体对象
+Dog d1 = new Dog("旺财", 3);
+Dog d2 = new Dog("来福", 2);
+
+// 2. 创建只装 Dog 的泛型容器，并添加进去
+ArrayList<Dog> dogList = new ArrayList<>();
+dogList.add(d1);
+dogList.add(d2);
+linked list在rememove时不会前移
+
+HashSet
+如果你有一堆数据，不需要关心顺序，但绝对不能有重复，就用 HashSet
+就是hashset相当于keys，然后hashmap相当于字典
+eg：
+import java.util.HashSet;
+
+public class SetDemo {
+    public static void main(String[] args) {
+        // 创建 HashSet（只能装 String）
+        HashSet<String> students = new HashSet<>();
+
+        // 1. 增（add）
+        students.add("张三");
+        students.add("李四");
+        students.add("张三"); // ⚠️ 再次添加张三，HashSet 会自动踢掉这个重复值！
+
+        // 2. 查（contains & size）
+        System.out.println("班里有张三吗？ " + students.contains("张三")); // 输出: true
+        System.out.println("班里一共几个人？ " + students.size());          // 输出: 2 (不是 3！)
+
+        // 3. 删（remove）
+        students.remove("李四");
+
+        // 4. 遍历（用 for-each 循环把所有人打印出来）
+        for (String name : students) {
+            System.out.println("学生: " + name);
+        }
+    }
+}
+
+hashmap的import java.util.HashMap;
+
+public class MapDemo {
+    public static void main(String[] args) {
+        // 创建 HashMap（Key 用 String 存学号，Value 用 String 存姓名）
+        HashMap<String, String> studentMap = new HashMap<>();
+
+        // 1. 增 / 改（put）
+        studentMap.put("S001", "张三");
+        studentMap.put("S002", "李四");
+        
+        // ⚠️ 重新 put 相同的 Key，会覆盖旧值（比如 S001 改名为 张三丰）
+        studentMap.put("S001", "张三丰"); 
+
+        // 2. 查（get）拿着 Key 去查 Value
+        String name = studentMap.get("S001");
+        System.out.println("S001 是谁？ " + name); // 输出: 张三丰
+
+        // 3. 删（remove）
+        studentMap.remove("S002"); // 删掉 S002 对应的李四
+
+        // 4. 遍历（先拿到所有的 Key 集合，再循环 get）
+        // 💡 注意：studentMap.keySet() 返回的就是一个包含了所有 Key 的 HashSet！
+        for (String id : studentMap.keySet()) {
+            System.out.println("学号: " + id + ", 姓名: " + studentMap.get(id));
+        }
+    }
+}
+recurtion
+核心定义：函数在执行过程中自己调用自己。  
+1. 核心结构（必须具备两要素）Base Case（基线条件/出口）：递归停止的条件，防止无限循环引发 StackOverflowError。  Recursive Case（递归步骤）：把大问题拆成“第一步”加上“规模更小的子问题”，并再次调用自身。
+递归的核心本质就是方法在自己的代码内部调用它自己。但是要能停止
+
+collection：
+所有的 Collection 容器都帮我们封装好了现成的“傻瓜式”方法，你再也不用手动去管底层数组的大小了： 
+添加元素：直接调用 .add(元素)，口袋自动变大。 
+删除元素：直接调用 .remove(元素)，自动删掉并整理空间。 
+查看大小：直接调用 .size()，立刻知道里面装了多少东西。  
+查重：直接调用 .contains(元素)，立刻告诉你里面有没有这个东西。  
+
+arrayList：
+import java.util.ArrayList;
+import java.util.List;
+
+public class ListDemo {
+    public static void main(String[] args) {
+        // 1. 创建容器（多事用接口 List 作类型接收，推荐写法）
+        List<String> list = new ArrayList<>();
+
+        // 2. 增（add）
+        list.add("旺财");
+        list.add("来福");
+        list.add("旺财"); // 允许重复
+
+        // 3. 查（get）按索引拿数据（从 0 开始）
+        System.out.println("第一个狗名: " + list.get(0)); // 输出: 旺财
+
+        // 4. 删（remove）
+        list.remove(1); // 删掉下标为 1 的"来福"
+
+        // 5. 遍历（用 for-each 循环）
+        for (String dog : list) {
+            System.out.println("狗: " + dog);
+        }
+    }
+}
+
+
+
+HashSet：
+import java.util.HashSet;
+import java.util.Set;
+
+public class SetDemo {
+    public static void main(String[] args) {
+        // 1. 创建容器
+        Set<String> set = new HashSet<>();
+
+        // 2. 增（add）
+        set.add("旺财");
+        set.add("来福");
+        set.add("旺财"); // ⚠️ 重复添加会自动被踢掉！
+
+        // 3. 查（contains）检查在不在里面
+        if (set.contains("旺财")) {
+            System.out.println("旺财在 Set 里！");
+        }
+
+        // 4. 删（remove）
+        set.remove("来福");
+
+        // 5. 遍历（注意：Set 没有下标，不能用 list.get(i)，只能循环）
+        for (String name : set) {
+            System.out.println("唯一狗名: " + name);
+        }
+    }
+}
+
+
+HashMap：
+import java.util.HashMap;
+import java.util.Map;
+
+public class MapDemo {
+    public static void main(String[] args) {
+        // 1. 创建容器 <Key的类型, Value的类型>
+        Map<String, Integer> dogAgeMap = new HashMap<>();
+
+        // 2. 增 / 改（put）
+        dogAgeMap.put("旺财", 3);
+        dogAgeMap.put("来福", 2);
+        dogAgeMap.put("旺财", 4); // ⚠️ Key 重复时，新 Value(4) 会覆盖旧 Value(3)
+
+        // 3. 查（get）拿着 Key 去取对应的 Value
+        int age = dogAgeMap.get("旺财");
+        System.out.println("旺财的年龄: " + age); // 输出: 4
+
+        // 4. 删（remove）
+        dogAgeMap.remove("来福");
+
+        // 5. 遍历（通过 keySet 拿所有的钥匙）
+        for (String key : dogAgeMap.keySet()) {
+            System.out.println("狗名: " + key + ", 年龄: " + dogAgeMap.get(key));
+        }
+    }
+}
+
+ArrayList 与 HashSet（共享 Collection 标准）：
+存数据都用 .add()，删数据都用 .remove()，看大小都用 .size()。  
+最大不同点在于“怎么拿数据”：ArrayList 靠位置顺序存，所以能用 list.get(0) 取第一个。  HashSet 内部是没有位置概念的（无序），不能写 set.get(0)。你只能用 set.contains("旺财") 查它在不在，或者用 for-each 循环把里面的东西一个个倒出来。  HashMap（Map 体系的特例）：  因为它存的是 配对数据（Key - Value），所以不能用单一参数的 .add()，必须用 .put(K, V)。  取数据时最方便：直接用 .get(Key) 就能精确定位并拿到后面的 Value
+这类函数处理完数据后还会返回一个新的 Stream，所以可以一直往后点 . 连着写。  .filter(x -> ...)：过滤作用：只保留让条件返回 true 的元素，其余踢掉。  例子：.filter(x -> x % 2 == 0)（只留偶数）。  .map(x -> ...)：转换/映射作用：把每一个元素加工或提取成新的模样。  例子：.map(x -> x.getName())（把“狗对象”变成“狗的名字字符串”）。  .limit(n)：限制数量作用：只保留前 $n$ 个元素，后面的不要了。  例子：.limit(10)（只拿前 10 个）。  .skip(n)：跳过作用：跳过前 $n$ 个元素，保留剩下的。  例子：.skip(2)（跳过前 2 个）。  二、 终止操作（打包收工，产生最终结果）这类函数一旦调用，传送带就停止工作，并吐出一个最终的结果（如 List、数字或布尔值）。  .toList()：装箱作用：把传送带上的所有元素收集并打包成一个新的 List。  .reduce(...) / .sum()：聚合/求和作用：把所有元素合并累加成一个最终数值。  例子：.reduce(0, (a, b) -> a + b) 或 .sum()。  .forEach(x -> ...)：逐个打印/操作作用：对每一个元素执行某段代码（比如循环打印）。  例子：.forEach(x -> System.out.println(x))。  .findFirst()：找第一个作用：拿到传送带上的第一个元素。  
+// 从 1 到 8 的列表中：跳过前2个 -> 留接下来的3个 -> 把它们相加求和[cite: 1]
+int total = Stream.of(1, 2, 3, 4, 5, 6, 7, 8)
+                  .skip(2)                 // 剩下 [3, 4, 5, 6, 7, 8][cite: 1]
+                  .limit(3)                // 剩下 [3, 4, 5][cite: 1]
+                  .reduce(0, (a, b) -> a + b); // 3 + 4 + 5 = 12[cite: 1]
